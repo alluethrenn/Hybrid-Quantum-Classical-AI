@@ -110,7 +110,7 @@ def train_model(config):
 # Main function
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train Hybrid Quantum-Classical Model")
-    parser.add_argument("--config", type=str, required=True, help="Path to config file")
+    parser.add_argument("--config", type=str, required=True, help=("configs/config.yaml")
     args = parser.parse_args()
 
     # Load config and train
