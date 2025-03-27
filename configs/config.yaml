@@ -1,1 +1,59 @@
+# General settings
+project_name: "Hybrid_Quantum_Classical_AI"
+seed: 42  # Random seed for reproducibility
+device: "cuda"  # Options: "cpu", "cuda" (for PyTorch/TensorFlow), "default.qubit" (for PennyLane)
+num_workers: 4  # Number of data loading workers
+
+# Data settings
+data:
+  dataset_path: "datasets/processed/"
+  batch_size: 32
+  shuffle: true
+  train_split: 0.8  # 80% training, 20% testing
+  normalize: true  # Apply min-max normalization
+
+# Quantum Model Settings
+quantum:
+  num_qubits: 4  # Number of qubits
+  shots: 1024  # Number of measurement shots for quantum circuits
+  optimizer: "Adam"
+  learning_rate: 0.01
+  entanglement: "CNOT"  # Options: "CNOT", "CZ", "CRX"
+  quantum_device: "default.qubit"  # PennyLane backend (Can be "qiskit.aer", "braket.local.qubit")
+  layers: 3  # Number of quantum circuit layers
+
+# Classical Neural Network Settings
+classical_nn:
+  architecture: "MLP"  # Options: "MLP", "CNN", "RNN"
+  hidden_layers: [64, 128, 64]  # Layer sizes
+  activation: "relu"  # Options: "relu", "sigmoid", "tanh"
+  optimizer: "Adam"
+  learning_rate: 0.001
+  dropout: 0.2
+
+# Training Settings
+training:
+  epochs: 50
+  early_stopping: true
+  patience: 5  # Stop if no improvement after 5 epochs
+  loss_function: "MSE"  # Options: "MSE", "CrossEntropy", "Huber"
+  checkpoint_dir: "results/models/"
+  save_best_model: true
+
+# Logging & Visualization
+logging:
+  log_level: "INFO"  # Options: "DEBUG", "INFO", "WARNING", "ERROR"
+  log_dir: "results/logs/"
+  tensorboard: true  # Enable TensorBoard visualization
+
+# Testing & Evaluation
+evaluation:
+  test_batch_size: 32
+  metrics: ["accuracy", "f1_score", "loss"]
+
+# Quantum-Classical Hybrid Model
+hybrid:
+  feature_selection: "Grover"  # Options: "Grover", "PCA", "Autoencoder"
+  model_type: "HybridQNN"  # Options: "HybridQNN", "FullyQuantum", "ClassicalMLP"
+  quantum_first: true  # If true, apply quantum layer before classical NN
 
