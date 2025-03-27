@@ -57,3 +57,22 @@ hybrid:
   model_type: "HybridQNN"  # Options: "HybridQNN", "FullyQuantum", "ClassicalMLP"
   quantum_first: true  # If true, apply quantum layer before classical NN
 
+  # Example config.yaml structure
+training:
+  epochs: 10
+  learning_rate: 0.001
+  checkpoint_dir: results/models
+  log_dir: results/logs  # TensorBoard log directory
+
+data:
+  batch_size: 32
+  test_data_path: "path/to/your/test_data"  # Add your test data path
+
+quantum:
+  num_qubits: 4
+  layers: 2
+
+classical_nn:
+  hidden_layers: [128, 64]
+
+
