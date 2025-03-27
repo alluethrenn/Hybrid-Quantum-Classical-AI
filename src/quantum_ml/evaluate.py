@@ -7,6 +7,10 @@ import os
 from torch.utils.tensorboard import SummaryWriter
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 from train import HybridModel  # Import the model from train.py
+import torchvision
+from torchvision import transforms
+from torch.utils.data import DataLoader, Dataset
+import pandas as pd
 
 # Load logging config
 with open("configs/logging.yaml", "r") as file:
@@ -19,13 +23,57 @@ def load_config(config_path):
     with open(config_path, "r") as file:
         return yaml.safe_load(file)
 
-# Evaluate model
+# 1. Load DataLoader for MNIST or Custom Dataset
+def load_mnist_data(batch_size):
+    transform = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize((0.5,), (0.5,))
+    ])
+    
+    # Download and load the test data (MNIST dataset)
+    test_data = torchvision.datasets.MNIST(root='./data', train=False, download=True, transform=transform)
+    test_loader = DataLoader(test_data, batch_size=batch_size, shuffle=False)
+    
+    return test_loader
+
+# Custom dataset loader (if you have a CSV file)
+class CustomDataset(Dataset):
+    def __init__(self, csv_file, transform=None):
+        # Read CSV file
+        self.data = pd.read_csv(csv_file)
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, idx):
+        # Assuming CSV has 'features' and 'labels' columns
+        sample = self.data.iloc[idx, :-1].values  # Features (exclude label column)
+        label = self.data.iloc[idx, -1]           # Label column
+        
+        if self.transform:
+            sample = self.transform(sample)
+        
+        return torch.tensor(sample, dtype=torch.float32), torch.tensor(label, dtype=torch.float32)
+
+def load_custom_data(csv_file, batch_size):
+    dataset = CustomDataset(csv_file)
+    data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
+    return data_loader
+
+# 2. Evaluate model
 def evaluate_model(config):
     logger.info("Loading test dataset...")
-    # Dummy dataset for evaluation (use actual test data here)
-    # For example, replace this with a DataLoader
-    X_test = torch.rand((config["data"]["batch_size"], config["quantum"]["num_qubits"]))
-    y_test = torch.rand((config["data"]["batch_size"], 1))
+    
+    # Load dataset based on config (either MNIST or custom CSV dataset)
+    if "test_data_path" in config["data"]:
+        test_loader = load_custom_data(config["data"]["test_data_path"], config["data"]["batch_size"])
+    else:
+        test_loader = load_mnist_data(config["data"]["batch_size"])
+
+    if not test_loader:
+        logger.error("Failed to load test dataset.")
+        return
 
     # Initialize model
     model = HybridModel(
@@ -49,12 +97,15 @@ def evaluate_model(config):
 
     # Evaluation loop
     logger.info("Starting evaluation...")
+    y_true = []
     y_pred = []
+
     with torch.no_grad():
-        outputs = model(X_test)
-        predicted = (outputs > 0.5).float()  # Assuming binary classification
-        y_pred.extend(predicted.cpu().numpy())
-        y_true = y_test.cpu().numpy()
+        for inputs, labels in test_loader:
+            outputs = model(inputs)
+            predicted = (outputs > 0.5).float()  # Assuming binary classification
+            y_true.extend(labels.cpu().numpy())
+            y_pred.extend(predicted.cpu().numpy())
 
     # Calculate metrics
     accuracy = accuracy_score(y_true, y_pred)
@@ -62,12 +113,12 @@ def evaluate_model(config):
     recall = recall_score(y_true, y_pred)
 
     # Log metrics to TensorBoard
-    writer.add_scalar("Loss/evaluation", nn.MSELoss()(outputs, y_test).item(), 0)
+    writer.add_scalar("Loss/evaluation", nn.MSELoss()(torch.tensor(y_pred), torch.tensor(y_true)).item(), 0)
     writer.add_scalar("Accuracy/evaluation", accuracy, 0)
     writer.add_scalar("Precision/evaluation", precision, 0)
     writer.add_scalar("Recall/evaluation", recall, 0)
 
-    logger.info(f"Evaluation Loss: {nn.MSELoss()(outputs, y_test).item():.4f}")
+    logger.info(f"Evaluation Loss: {nn.MSELoss()(torch.tensor(y_pred), torch.tensor(y_true)).item():.4f}")
     logger.info(f"Accuracy: {accuracy:.4f}")
     logger.info(f"Precision: {precision:.4f}")
     logger.info(f"Recall: {recall:.4f}")
@@ -84,5 +135,6 @@ if __name__ == "__main__":
     # Load config and evaluate
     config = load_config(args.config)
     evaluate_model(config)
+
 
 
