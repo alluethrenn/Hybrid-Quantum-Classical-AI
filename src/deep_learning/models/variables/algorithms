@@ -1,0 +1,144 @@
+
+from qiskit import ClassicalRegister
+from qiskit import QuantumRegister
+from qiskit import QuantumCircuit
+from qiskit import Aer
+from qiskit import transpile
+from qiskit import assemble
+from qiskit.visualization import plot_histogram
+from qiskit.tools.monitor import job_monitor
+import matplotlib.pyplot as plt
+def create_quantum_circuit(q, c):
+    qc = QuantumCircuit(q, c)
+    qc.h(q)
+    qc.measure(q, c)
+    return qc
+
+def create_grover_diffuser(nqubits):
+    qc = QuantumCircuit(nqubits)
+    for qubit in range(nqubits):
+        qc.h(qubit)
+    for qubit in range(nqubits):
+        qc.x(qubit)
+    qc.h(nqubits - 1)
+    qc.mct(list(range(nqubits - 1)), nqubits - 1)
+    qc.h(nqubits - 1)
+    for qubit in range(nqubits):
+        qc.x(qubit)
+    for qubit in range(nqubits):
+        qc.h(qubit)
+    U_s = qc.to_gate()
+    U_s.name = "U$_s$"
+    return U_s
+
+# Define a Quantum Circuit with n qubits and a classical register for measurement
+n = 9 # change this value to increase or decrease the number of qubits
+oracle_qc = QuantumCircuit(n)
+diffuser = create_grover_diffuser(n)
+
+# Setup Grover's Algorithm
+grover_circuit = QuantumCircuit(n, n)
+for qubit in range(n):
+    grover_circuit.h(qubit)
+grover_circuit.append(diffuser, range(n))
+
+# Add measurement operation to all qubits
+grover_circuit.measure(range(n), range(n))
+
+# Display the circuit
+print(grover_circuit)
+
+# Run the quantum circuit on a simulator backend
+simulator = Aer.get_backend('qasm_simulator')
+transpiled_grover_circuit = transpile(grover_circuit, simulator)
+qobj = assemble(transpiled_grover_circuit)
+result = simulator.run(qobj).result()
+
+# Get the histogram data and print it
+counts = result.get_counts(grover_circuit)
+print("Total count for states are:",counts)
+
+# Visualize the results
+histogram = plot_histogram(counts)
+plt.show()
+
+# Save the circuit and counts to a file
+with open('grover_circuit.qasm', 'w') as f:
+    f.write(transpiled_grover_circuit.qasm())
+with open('grover_counts.txt', 'w') as f:
+    f.write(str(counts))
+
+
+
+# save the models
+with open('grover_counts.txt', 'w') as f:
+    f.write(str(counts))
+
+# Display the circuit
+print(grover_circuit)
+
+# Save the job monitor
+save_job = result.save_job()
+print(save_job)
+save = save_job.result()
+print(save)
+
+# Display the circuit
+print(grover_circuit)
+save_job = result.save_job()
+print(save_job)
+save = save_job.result()
+
+
+# Train Quantum Model
+def train_quantum_model(nqubits, shots):
+# Set up the Quantum Circuit
+    q = QuantumRegister(nqubits)
+    c = ClassicalRegister(nqubits)
+    qc = QuantumCircuit(q, c)
+    qc.h(q)
+    qc.measure(q, c)
+# Set up the IBMQ backend
+    backend = least_busy(provider.backends(simulator=False))
+# Set up the Quantum Job
+    job = execute(qc, backend, shots=shots)
+# Display the circuit
+    print(qc)
+# Save the job
+    save_job = job.result()
+# Display the circuit
+    print(qc)
+# Save the job
+    save = save_job.result()
+# Get the histogram data and print it
+    counts = save.get_counts(qc)
+    print("Total count for states are:",counts)
+# Visualize the results
+    histogram = plot_histogram(counts)
+    plt.show()
+# Save the circuit and counts to a file
+    with open('quantum_circuit.qasm', 'w') as f:
+        f.write(qc.qasm())
+    with open('quantum_counts.txt', 'w'), f:
+        f.write(str(counts))
+
+    return counts
+# Display the D-Wave Quantum Annealer Job
+print(job)
+# Save the job
+save_job = job.result()
+
+# Qiskit Quantum Model
+def train_quantum_model(nqubits, shots):
+# Set up the Quantum Circuit
+    q = QuantumRegister(nqubits)
+    c = ClassicalRegister(nqubits)
+    qc = QuantumCircuit(q, c)
+    qc.h(q)
+    qc.measure(q, c)
+
+# Set up the IBMQ backend
+    backend = least_busy(provider.backends(simulator=False))
+
+# Set up the Quantum Job
+    job = execute(qc, backend, shots=shots)
