@@ -1,25 +1,63 @@
 # src/classical_ml/train.py
 
 import os
-import pickle
+import joblib
 import numpy as np
-from datasets import load_mnist  # Or any dataset from datasets.py
-from models import get_logistic_regression, get_svm, get_random_forest
+from datasets import load_mnist
 from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import StandardScaler
 
-MODEL_PATH = "results/classical_ml_model.pkl"
-os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)  # Create results directory
+MODEL_PATHS = {
+    "decision_tree": "src/classical_ml/models/best_decision_tree_model.joblib",
+    "logistic_regression": "src/classical_ml/models/best_logistic_regression_model.joblib",
+    "mlp": "src/classical_ml/models/best_mlp_model.joblib",
+    "random_forest": "src/classical_ml/models/best_random_forest_model.joblib",
+    "svm": "src/classical_ml/models/best_svm_model.joblib",
+}
+
+FEATURE_TRANSFORMS_PATH = "src/classical_ml/models/feature_transformations.joblib"  # Save transformation here
 
 def save_model(model, model_path):
     """Save the trained model."""
     with open(model_path, 'wb') as f:
-        pickle.dump(model, f)
+        joblib.dump(model, f)
     print(f"Model saved to {model_path}")
+
+def save_feature_transformations(scaler, path):
+    """Save feature transformations (like scaling)"""
+    with open(path, 'wb') as f:
+        joblib.dump(scaler, f)
+    print(f"Feature transformations saved to {path}")
+
+def load_feature_transformations(path):
+    """Load feature transformations"""
+    if os.path.exists(path):
+        with open(path, 'rb') as f:
+            return joblib.load(f)
+    else:
+        print(f"No feature transformations found at {path}")
+        return None
 
 def train_model(model_type='logistic_regression', batch_size=32):
     # Load data
     train_loader = load_mnist(batch_size=batch_size)
-    
+
+    # Flatten the images and prepare training data
+    train_data, train_labels = [], []
+    for data, labels in train_loader:
+        train_data.append(data.view(data.size(0), -1).numpy())  # Flatten images
+        train_labels.append(labels.numpy())
+
+    train_data = np.concatenate(train_data)
+    train_labels = np.concatenate(train_labels)
+
+    # Feature transformation (e.g., scaling)
+    scaler = StandardScaler()
+    train_data = scaler.fit_transform(train_data)
+
+    # Save the transformations
+    save_feature_transformations(scaler, FEATURE_TRANSFORMS_PATH)
+
     # Choose the model
     if model_type == 'logistic_regression':
         model = get_logistic_regression()
@@ -30,32 +68,13 @@ def train_model(model_type='logistic_regression', batch_size=32):
     else:
         raise ValueError("Unknown model type.")
     
-    # Convert data to numpy for sklearn models
-    train_data, train_labels = [], []
-    for data, labels in train_loader:
-        train_data.append(data.view(data.size(0), -1).numpy())  # Flatten images
-        train_labels.append(labels.numpy())
-
-    train_data = np.concatenate(train_data)
-    train_labels = np.concatenate(train_labels)
-
     # Train the model
     model.fit(train_data, train_labels)
 
     # Save the trained model
-    save_model(model, MODEL_PATH)
+    save_model(model, MODEL_PATHS[model_type])
+
     return model
 
-def load_model(model_path):
-    """Load a saved model."""
-    if not os.path.exists(model_path):
-        print("No model file found, training a new model...")
-        return train_model()  # Train the model if no saved model exists
-    else:
-        with open(model_path, 'rb') as f:
-            model = pickle.load(f)
-        print(f"Model loaded from {model_path}")
-        return model
-
 if __name__ == "__main__":
-    load_model(MODEL_PATH)
+    train_model('logistic_regression')  # Or change this to train other models
