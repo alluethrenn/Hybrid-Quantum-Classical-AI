@@ -3,6 +3,7 @@
 import os
 import torch
 from torchvision import datasets, transforms
+from torchvision.transforms import ToTensor
 from torch.utils.data import DataLoader
 
 def get_mnist_dataloader(batch_size=32):
