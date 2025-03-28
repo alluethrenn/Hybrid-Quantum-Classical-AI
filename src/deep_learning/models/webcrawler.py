@@ -85,20 +85,3 @@ with open("code_snippets.json", "w") as f:
     json.dump(collected_snippets, f, indent=4)
 
 print("Crawling complete. Snippets saved.")
- # use the collected snippets for analysis and model training for code completion, and generation tasks
- # Example of using the collected snippets
-import json
-import random
-import re
-
-def load_snippets(file_path):
-    with open(file_path, 'r') as f:
-        snippets = json.load(f)
-        return snippets
-def preprocess_snippets(snippets):
-    processed_snippets = []
-    for site, code_snippets in snippets.items():
-        for snippet in code_snippets:
-            # Remove unnecessary whitespace and comments
-            snippet = re.sub(r'\s+', ' ', snippet)
-
