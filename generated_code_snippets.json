@@ -1,0 +1,127 @@
+[
+    {
+        "code_snippet": "for i in range(157):\n    print(i)",
+        "language": "Random",
+        "label": "Loop"
+    },
+    {
+        "code_snippet": "if 9 > 10:\n    print('Greater than 10!')",
+        "language": "Random",
+        "label": "Condition"
+    },
+    {
+        "code_snippet": "def func_116():\n    print('Hello, World!')",
+        "language": "Random",
+        "label": "Function"
+    },
+    {
+        "code_snippet": "while 112:\n    print('Looping...')",
+        "language": "Random",
+        "label": "Loop"
+    },
+    {
+        "code_snippet": "while 81:\n    print('Looping...')",
+        "language": "Random",
+        "label": "Loop"
+    },
+    {
+        "code_snippet": "for i in range(4):\n    print(i)",
+        "language": "Random",
+        "label": "Loop"
+    },
+    {
+        "code_snippet": "def func_742(a, b):\n    return a + b",
+        "language": "Random",
+        "label": "Function"
+    },
+    {
+        "code_snippet": "while 67:\n    print('Looping...')",
+        "language": "Random",
+        "label": "Loop"
+    },
+    {
+        "code_snippet": "if y != 5 > 10:\n    print('Greater than 10!')",
+        "language": "Random",
+        "label": "Condition"
+    },
+    {
+        "code_snippet": "def func_947(a, b):\n    return a + b",
+        "language": "Random",
+        "label": "Function"
+    },
+    {
+        "code_snippet": "def func_93(a, b):\n    return a + b",
+        "language": "Random",
+        "label": "Function"
+    },
+    {
+        "code_snippet": "if x == 10:\n    print('Condition Met!')",
+        "language": "Random",
+        "label": "Condition"
+    },
+    {
+        "code_snippet": "def func_573(a, b):\n    return a + b",
+        "language": "Random",
+        "label": "Function"
+    },
+    {
+        "code_snippet": "def func_24():\n    print('Hello, World!')",
+        "language": "Random",
+        "label": "Function"
+    },
+    {
+        "code_snippet": "def func_710():\n    print('Hello, World!')",
+        "language": "Random",
+        "label": "Function"
+    },
+    {
+        "code_snippet": "def func_108(a, b):\n    return a + b",
+        "language": "Random",
+        "label": "Function"
+    },
+    {
+        "code_snippet": "if x == 10 > 10:\n    print('Greater than 10!')",
+        "language": "Random",
+        "label": "Condition"
+    },
+    {
+        "code_snippet": "if 5 > 10:\n    print('Greater than 10!')",
+        "language": "Random",
+        "label": "Condition"
+    },
+    {
+        "code_snippet": "def func_693(a, b):\n    return a + b",
+        "language": "Random",
+        "label": "Function"
+    },
+    {
+        "code_snippet": "def func_987():\n    print('Hello, World!')",
+        "language": "Random",
+        "label": "Function"
+    },
+    {
+        "code_snippet": "if 13 > 10:\n    print('Greater than 10!')",
+        "language": "Random",
+        "label": "Condition"
+    },
+    {
+        "code_snippet": "if y != 5:\n    print('Condition Met!')",
+        "language": "Random",
+        "label": "Condition"
+    },
+    {
+        "code_snippet": "for i in range(138):\n    print(i)",
+        "language": "Random",
+        "label": "Loop"
+    },
+    {
+        "code_snippet": "for i in range(146):\n    print(i)",
+        "language": "Random",
+        "label": "Loop"
+    },
+    {
+        "code_snippet": "while 37:\n    print('Looping...')",
+        "language": "Random",
+        "label": "Loop"
+    }
+]

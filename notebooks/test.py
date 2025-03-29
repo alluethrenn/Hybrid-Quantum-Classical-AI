@@ -36,7 +36,7 @@ def load_lstm_model(model_path):
     return model
 
 # Preprocess text for the LSTM model
-def preprocess_text(text, vocab, tokenizer, max_length=100):
+def preprocess_text(text, vocab, tokenizer, max_length=10):
     tokens = tokenizer(text)
     indices = [vocab[token] for token in tokens if token in vocab]
     if len(indices) < max_length:
@@ -91,7 +91,7 @@ class CodeSnippetCrawler:
 
         return snippets
 
-    def crawl(self, url, site, max_depth=2, delay=2):
+    def crawl(self, url, site, max_depth=1, delay=1):
         if url in self.visited_urls or max_depth <= 0:
             return []
         
@@ -108,7 +108,7 @@ class CodeSnippetCrawler:
         links = [a['href'] for a in soup.find_all('a', href=True)]
         valid_links = [link for link in links if site in link and link.startswith('http')]
 
-        time.sleep(random.uniform(delay, delay + 1))  # Respect server load
+        time.sleep(random.uniform(delay, delay + 0))  # Respect server load
         
         for link in valid_links:
             snippets.extend(self.crawl(link, site, max_depth - 1, delay))
@@ -150,19 +150,71 @@ sites = {
     "geeksforgeeks": "https://www.geeksforgeeks.org/python-programming-language/",
     "wikipedia": "https://en.wikipedia.org/wiki/Python_(programming_language)"
 }
+#use beautiful soup to extract text and code from /workspaces/Hybrid-Quantum-Classical-AI/codedata.html
+html_file_path = "/workspaces/Hybrid-Quantum-Classical-AI/codedata.html"
+with open(html_file_path, 'r', encoding='utf-8') as f:
+    html_content = f.read()
+    # extract text and code
+    # use Beautifulsoup to parse the HTML content
+
+from bs4 import BeautifulSoup
+soup = BeautifulSoup(html_content, 'html.parser')
+# Extract text
+text_elements = soup.find_all('p') # Example: extract all paragraphs
+text_data = ' '.join([element.get_text() for element in text_elements])
+# Extract code
+code_elements = soup.find_all('code') # Example: extract all code blocks
+code_data = '\n'.join([element.get_text() for element in code_elements])
+import re
+cleaned_text = re.sub(r'<[^>]+>', '', text_data) # Remove HTML tags
+cleaned_text = cleaned_text.strip() # Remove leading/trailing whitespace
+cleaned_text = re.sub(r'\s+', ' ', cleaned_text) # Remove extra spacescleaned_code = re.sub(r'#.*', '', code_data) # Remove comments (for Python)
+cleaned_text = cleaned_text.strip()
+ # Store in a file
+with open('output.txt', 'w', encoding='utf-8') as f:
+ f.write("Cleaned Text:\n" + cleaned_text)
+
+
+
 
 # Load the LSTM model
 model_path = "/workspaces/Hybrid-Quantum-Classical-AI/lstm_model_final.pth"
 lstm_model = load_lstm_model(model_path)
 
-# Initialize tokenizer and vocabulary
-tokenizer = get_tokenizer("basic_english")
-print(tokenizer("This is a test"))
-dummy_snippets = ["This is a sample snippet for building vocabulary."]
-vocab = build_vocab(dummy_snippets, tokenizer)
+# Load or build the vocabulary from the HTML file
+html_file_path = "/workspaces/Hybrid-Quantum-Classical-AI/codedata.html"
+try:
+    with open(html_file_path, 'r', encoding='utf-8') as f:
+        html_content = f.read()
+        soup = BeautifulSoup(html_content, 'html.parser')
+        
+        # Attempt to extract code snippets from <code> tags
+        code_elements = soup.find_all('code')
+        snippets = [element.get_text(strip=True) for element in code_elements]
+        
+        # If no <code> tags are found, try alternative parsing logic
+        if not snippets:
+            logging.warning("No <code> tags found. Attempting to extract other content.")
+            pre_elements = soup.find_all('pre')  # Try extracting <pre> tags as a fallback
+            snippets = [element.get_text(strip=True) for element in pre_elements]
+        
+        if not snippets:
+            raise ValueError("No code snippets found in the HTML file.")
+        
+        # Build vocabulary from the extracted snippets
+        vocab = build_vocab(snippets, get_tokenizer("basic_english"))
+        vocab_path = "/workspaces/Hybrid-Quantum-Classical-AI/vocab.pkl"
+        with open(vocab_path, "wb") as f:
+            joblib.dump(vocab, f)
+except FileNotFoundError:
+    logging.error(f"{html_file_path} not found. Please provide the file.")
+    exit(1)
+except ValueError as e:
+    logging.error(f"Error processing {html_file_path}: {e}")
+    exit(1)
 
 # Initialize the crawler
-crawler = CodeSnippetCrawler(sites, lstm_model, vocab, tokenizer)
+crawler = CodeSnippetCrawler(sites, lstm_model, vocab, get_tokenizer("basic_english"))
 
 # Load previous state if exists
 crawler.load_state()
@@ -174,11 +226,48 @@ for site, url in sites.items():
     predictions = crawler.predict_snippets(snippets)
     collected_snippets[site] = {"snippets": snippets, "predictions": predictions}
 
-# Save snippets and state after crawling
-with open("code_snippets_with_predictions.json", "w") as f:
-    json.dump(collected_snippets, f, indent=4)
+# Save snippets, state, and model after crawling
+html_content = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Snippets with Predictions</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; }
+        h1 { color: #333; }
+        .site { margin-bottom: 20px; }
+        .snippet { background: #f4f4f4; padding: 10px; border: 1px solid #ddd; margin-bottom: 10px; }
+        .prediction { color: #555; font-style: italic; }
+    </style>
+</head>
+<body>
+    <h1>Code Snippets with Predictions</h1>
+"""
+
+for site, data in collected_snippets.items():
+    html_content += f"<div class='site'><h2>{site}</h2>"
+    for snippet, prediction in zip(data["snippets"], data["predictions"]):
+        html_content += f"""
+        <div class='snippet'>
+            <pre>{snippet}</pre>
+            <p class='prediction'>Prediction: {prediction:.4f}</p>
+        </div>
+        """
+    html_content += "</div>"
+
+html_content += """
+</body>
+</html>
+"""
+
+with open("code_snippets_with_predictions.html", "w") as f:
+    f.write(html_content)
 
 crawler.snippets = collected_snippets  # Update the snippets
-crawler.save_state()  # Save the updated state
+crawler.save_state()  # Save the visited URLs and state
 
-print("Crawling complete. Snippets and predictions saved.")
+# Save the model
+torch.save(lstm_model, model_path)
+print("Crawling complete. Snippets, state, model, and predictions saved.")

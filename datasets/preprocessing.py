@@ -118,8 +118,7 @@ def save_data(train, test, train_path, test_path):
 if __name__ == "__main__":
     # Define input and output file paths
     input_files = [
-        "/workspaces/Hybrid-Quantum-Classical-AI/datasets/raw/Sheet_1.csv",
-        "/workspaces/Hybrid-Quantum-Classical-AI/datasets/raw/Sheet_2.csv"
+        "/workspaces/Hybrid-Quantum-Classical-AI/code_dataset.csv"
     ]  # List of dataset paths
     output_dir = "/workspaces/Hybrid-Quantum-Classical-AI/datasets/processed"  # Desired output directory
     os.makedirs(output_dir, exist_ok=True)  # Ensure the directory exists

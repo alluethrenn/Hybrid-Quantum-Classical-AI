@@ -1,0 +1,70 @@
+code_snippet,language,label,timestamp
+"try:
+    x = 10 / 0
+except ZeroDivisionError:
+    print('Cannot divide by zero!')",Python,Intermediate,2025-03-29 10:19:26
+"for i in range(3):
+    print(i)",Python,Starter,2025-03-29 10:19:26
+"def train_model(model, data, labels, epochs=10, lr=0.01):
+    for epoch in range(epochs):
+        model.train()
+        optimizer = torch.optim.SGD(model.parameters(), lr=lr)
+        optimizer.zero_grad()
+        predictions = model(data)
+        loss = nn.CrossEntropyLoss()(predictions, labels)
+        loss.backward()
+        optimizer.step()",Python,Master,2025-03-29 10:19:26
+"if 5 > 5:
+    print('Greater than 5!')",Python,Starter,2025-03-29 10:19:26
+"while 10:
+    print('Looping!')",Python,Starter,2025-03-29 10:19:26
+"while 6:
+    print('Looping!')",Python,Starter,2025-03-29 10:19:26
+"while 2:
+    print('Looping!')",Python,Starter,2025-03-29 10:19:26
+"a = 5
+b = 10
+print(a + b)",Python,Beginner,2025-03-29 10:19:26
+"class NeuralNetwork:
+    def __init__(self, layers):
+        self.layers = layers
+        self.weights = [np.random.randn(layers[i], layers[i+1]) for i in range(len(layers)-1)]
+
+    def feedforward(self, X):
+        for layer in self.weights:
+            X = np.dot(X, layer)
+        return X",Python,Master,2025-03-29 10:19:26
+"while 1:
+    print('Looping!')",Python,Starter,2025-03-29 10:19:26
+"for i in range(4):
+    print(i)",Python,Starter,2025-03-29 10:19:26
+"import asyncio
+async def say_hello():
+    print('Hello!')
+
+asyncio.run(say_hello())",Python,Pro,2025-03-29 10:19:26
+"name = 'Alice'
+print('Hello, ' + name)",Python,Beginner,2025-03-29 10:19:26
+"a = 5
+b = 10
+print(a + b)",Python,Beginner,2025-03-29 10:19:26
+"name = 'Alice'
+print('Hello, ' + name)",Python,Beginner,2025-03-29 10:19:26
+"def add(a, b):
+    return a + b",Python,Intermediate,2025-03-29 10:19:26
+"x = 10
+print(x)",Python,Beginner,2025-03-29 10:19:26
+"import threading
+
+def worker():
+    print('Worker thread started!')
+
+thread = threading.Thread(target=worker)
+thread.start()",Python,Advanced,2025-03-29 10:19:26
+"def factorial(n):
+    if n == 0:
+        return 1
+    else:
+        return n * factorial(n - 1)",Python,Intermediate,2025-03-29 10:19:26
+"x = 10
+print(x)",Python,Beginner,2025-03-29 10:19:26

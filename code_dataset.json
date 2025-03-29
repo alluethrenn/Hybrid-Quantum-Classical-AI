@@ -1,0 +1,122 @@
+[
+    {
+        "code_snippet": "try:\n    x = 10 / 0\nexcept ZeroDivisionError:\n    print('Cannot divide by zero!')",
+        "language": "Python",
+        "label": "Intermediate",
+        "timestamp": "2025-03-29 10:19:26"
+    },
+    {
+        "code_snippet": "for i in range(3):\n    print(i)",
+        "language": "Python",
+        "label": "Starter",
+        "timestamp": "2025-03-29 10:19:26"
+    },
+    {
+        "code_snippet": "def train_model(model, data, labels, epochs=10, lr=0.01):\n    for epoch in range(epochs):\n        model.train()\n        optimizer = torch.optim.SGD(model.parameters(), lr=lr)\n        optimizer.zero_grad()\n        predictions = model(data)\n        loss = nn.CrossEntropyLoss()(predictions, labels)\n        loss.backward()\n        optimizer.step()",
+        "language": "Python",
+        "label": "Master",
+        "timestamp": "2025-03-29 10:19:26"
+    },
+    {
+        "code_snippet": "if 5 > 5:\n    print('Greater than 5!')",
+        "language": "Python",
+        "label": "Starter",
+        "timestamp": "2025-03-29 10:19:26"
+    },
+    {
+        "code_snippet": "while 10:\n    print('Looping!')",
+        "language": "Python",
+        "label": "Starter",
+        "timestamp": "2025-03-29 10:19:26"
+    },
+    {
+        "code_snippet": "while 6:\n    print('Looping!')",
+        "language": "Python",
+        "label": "Starter",
+        "timestamp": "2025-03-29 10:19:26"
+    },
+    {
+        "code_snippet": "while 2:\n    print('Looping!')",
+        "language": "Python",
+        "label": "Starter",
+        "timestamp": "2025-03-29 10:19:26"
+    },
+    {
+        "code_snippet": "a = 5\nb = 10\nprint(a + b)",
+        "language": "Python",
+        "label": "Beginner",
+        "timestamp": "2025-03-29 10:19:26"
+    },
+    {
+        "code_snippet": "class NeuralNetwork:\n    def __init__(self, layers):\n        self.layers = layers\n        self.weights = [np.random.randn(layers[i], layers[i+1]) for i in range(len(layers)-1)]\n\n    def feedforward(self, X):\n        for layer in self.weights:\n            X = np.dot(X, layer)\n        return X",
+        "language": "Python",
+        "label": "Master",
+        "timestamp": "2025-03-29 10:19:26"
+    },
+    {
+        "code_snippet": "while 1:\n    print('Looping!')",
+        "language": "Python",
+        "label": "Starter",
+        "timestamp": "2025-03-29 10:19:26"
+    },
+    {
+        "code_snippet": "for i in range(4):\n    print(i)",
+        "language": "Python",
+        "label": "Starter",
+        "timestamp": "2025-03-29 10:19:26"
+    },
+    {
+        "code_snippet": "import asyncio\nasync def say_hello():\n    print('Hello!')\n\nasyncio.run(say_hello())",
+        "language": "Python",
+        "label": "Pro",
+        "timestamp": "2025-03-29 10:19:26"
+    },
+    {
+        "code_snippet": "name = 'Alice'\nprint('Hello, ' + name)",
+        "language": "Python",
+        "label": "Beginner",
+        "timestamp": "2025-03-29 10:19:26"
+    },
+    {
+        "code_snippet": "a = 5\nb = 10\nprint(a + b)",
+        "language": "Python",
+        "label": "Beginner",
+        "timestamp": "2025-03-29 10:19:26"
+    },
+    {
+        "code_snippet": "name = 'Alice'\nprint('Hello, ' + name)",
+        "language": "Python",
+        "label": "Beginner",
+        "timestamp": "2025-03-29 10:19:26"
+    },
+    {
+        "code_snippet": "def add(a, b):\n    return a + b",
+        "language": "Python",
+        "label": "Intermediate",
+        "timestamp": "2025-03-29 10:19:26"
+    },
+    {
+        "code_snippet": "x = 10\nprint(x)",
+        "language": "Python",
+        "label": "Beginner",
+        "timestamp": "2025-03-29 10:19:26"
+    },
+    {
+        "code_snippet": "import threading\n\ndef worker():\n    print('Worker thread started!')\n\nthread = threading.Thread(target=worker)\nthread.start()",
+        "language": "Python",
+        "label": "Advanced",
+        "timestamp": "2025-03-29 10:19:26"
+    },
+    {
+        "code_snippet": "def factorial(n):\n    if n == 0:\n        return 1\n    else:\n        return n * factorial(n - 1)",
+        "language": "Python",
+        "label": "Intermediate",
+        "timestamp": "2025-03-29 10:19:26"
+    },
+    {
+        "code_snippet": "x = 10\nprint(x)",
+        "language": "Python",
+        "label": "Beginner",
+        "timestamp": "2025-03-29 10:19:26"
+    }
+]

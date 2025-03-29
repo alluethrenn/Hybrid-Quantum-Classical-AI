@@ -8,7 +8,7 @@ from src.deep_learning.models.model import DeepLearningModel  # Updated import p
 from datasets import get_mnist_dataloader
 
 CHECKPOINT_DIR = "results/checkpoints"
-MODEL_PATH = "results/deep_learning_model.pth"
+MODEL_PATH = "results//workspaces/Hybrid-Quantum-Classical-AI/lstm_model_final.pth"
 
 os.makedirs(CHECKPOINT_DIR, exist_ok=True)  # Ensure checkpoint directory exists
 
@@ -23,7 +23,7 @@ def save_checkpoint(model, epoch, loss, optimizer):
     }, checkpoint_path)
     print(f"Checkpoint saved: {checkpoint_path}")
 
-def train_model(epochs=10, lr=0.001, batch_size=32):
+def train_model(epochs=100, lr=0.001, batch_size=32):
     train_loader, _ = get_mnist_dataloader(batch_size)
     
     model = DeepLearningModel()
